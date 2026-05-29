@@ -9,6 +9,7 @@ Thank you for your interest in contributing to AnchorKit! This document provides
 - [Development Environment Setup](#development-environment-setup)
 - [Makefile Shortcuts](#makefile-shortcuts)
 - [Running Tests](#running-tests)
+  - [Test Snapshots](#test-snapshots)
 - [Code Style Guidelines](#code-style-guidelines)
 - [Branch Naming Conventions](#branch-naming-conventions)
 - [Pull Request Process](#pull-request-process)
@@ -120,6 +121,29 @@ cargo test domain_validator
 # Run tests with output
 cargo test -- --nocapture
 ```
+
+### Test Snapshots
+
+The Soroban SDK automatically records ledger state to JSON snapshot files after
+each test that uses `Env::default()`. These snapshots live under
+`test_snapshots/` and are checked into the repository.
+
+- **Adding new tests** — just run `cargo test`. Snapshots are generated
+  automatically for any test that uses the Soroban test environment.
+- **Changing existing behaviour** — `cargo test` regenerates snapshots in
+  place. Commit the updated `.json` files alongside your code changes so they
+  stay in sync.
+- **Renaming or removing tests** — delete stale snapshot directories for any
+  modules you rename or remove. Orphaned snapshots are not cleaned up
+  automatically and will accumulate.
+
+Snapshots serve as a regression record of expected ledger state (auth, storage,
+events). Review the diff in a PR to confirm your changes produce the intended
+side effects.
+
+See [SNAPSHOT_CONVENTIONS.md](./SNAPSHOT_CONVENTIONS.md) for details on how
+snapshot paths are derived from the module hierarchy and for rules to keep the
+directory clean.
 
 ### UI Tests
 
